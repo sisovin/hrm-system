@@ -74,16 +74,17 @@ Created 4 roles with specific permission sets:
 
 ### 6. Created Test Users
 
-Generated 4 test users with different roles:
+Generated 5 test users with different roles:
 
 | Role | Name | Email | Password |
 |------|------|-------|----------|
-| Super Admin | Test User | <admin@hrm.com> | password123 |
+| Super Admin | Admin User | <admin@example.com> | password |
+| Admin | Test User | <test@example.com> | password |
 | Admin | Admin User | <admin.user@hrm.com> | password123 |
 | HR Manager | Sarah Johnson | <hr.manager@hrm.com> | password123 |
 | Employee | John Doe | <john.doe@hrm.com> | password123 |
 
-Each test user has an associated employee record with full profile information.
+Users with email ending in @hrm.com have associated employee records with full profile information.
 
 ## 📊 Database Structure
 
@@ -142,12 +143,12 @@ Plus permissions for:
 
 ### Testing Instructions
 
-1. **Login as Super Admin** (`admin@hrm.com / password123`)
+1. **Login as Super Admin** (`admin@example.com / password`)
    - Access all resources
    - Manage roles and permissions
    - Full CRUD operations on all entities
 
-2. **Login as Admin** (`admin.user@hrm.com / password123`)
+2. **Login as Admin** (`test@example.com / password` or `admin.user@hrm.com / password123`)
    - Access most resources
    - Cannot manage roles directly
    - Full CRUD on HR resources
@@ -181,6 +182,7 @@ Plus permissions for:
 
 - `database/seeders/RolesAndPermissionsSeeder.php` - Creates roles and assigns permissions
 - `database/seeders/TestUsersSeeder.php` - Creates test users for each role
+- `database/seeders/AssignRolesSeeder.php` - Assigns roles to existing users
 
 ### Filament Resources
 
