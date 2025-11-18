@@ -4,7 +4,6 @@ namespace App\Filament\Employee\Pages;
 
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -62,29 +61,25 @@ class Profile extends Page implements HasForms
     {
         return $schema
             ->components([
-                Section::make('Profile Information')
-                    ->description('Update your account profile information.')
-                    ->schema([
-                        TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxLength(255),
-                        
-                        TextInput::make('email')
-                            ->label('Email')
-                            ->email()
-                            ->required()
-                            ->maxLength(255)
-                            ->disabled(),
-                        
-                        FileUpload::make('avatar')
-                            ->label('Profile Photo')
-                            ->image()
-                            ->avatar()
-                            ->directory('avatars')
-                            ->visibility('public')
-                            ->maxSize(1024),
-                    ]),
+                TextInput::make('name')
+                    ->label('Name')
+                    ->required()
+                    ->maxLength(255),
+                
+                TextInput::make('email')
+                    ->label('Email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255)
+                    ->disabled(),
+                
+                FileUpload::make('avatar')
+                    ->label('Profile Photo')
+                    ->image()
+                    ->avatar()
+                    ->directory('avatars')
+                    ->visibility('public')
+                    ->maxSize(1024),
             ])
             ->statePath('profileData');
     }
@@ -93,28 +88,24 @@ class Profile extends Page implements HasForms
     {
         return $schema
             ->components([
-                Section::make('Update Password')
-                    ->description('Ensure your account is using a long, random password to stay secure.')
-                    ->schema([
-                        TextInput::make('current_password')
-                            ->label('Current Password')
-                            ->password()
-                            ->required()
-                            ->currentPassword(),
-                        
-                        TextInput::make('password')
-                            ->label('New Password')
-                            ->password()
-                            ->required()
-                            ->minLength(8)
-                            ->confirmed()
-                            ->rules(['regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/']),
-                        
-                        TextInput::make('password_confirmation')
-                            ->label('Confirm Password')
-                            ->password()
-                            ->required(),
-                    ]),
+                TextInput::make('current_password')
+                    ->label('Current Password')
+                    ->password()
+                    ->required()
+                    ->currentPassword(),
+                
+                TextInput::make('password')
+                    ->label('New Password')
+                    ->password()
+                    ->required()
+                    ->minLength(8)
+                    ->confirmed()
+                    ->rules(['regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/']),
+                
+                TextInput::make('password_confirmation')
+                    ->label('Confirm Password')
+                    ->password()
+                    ->required(),
             ])
             ->statePath('passwordData');
     }

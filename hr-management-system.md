@@ -70,6 +70,6 @@ Build a **comprehensive, modern HR Management System website** using **Filament 
   - Header  
   - Main Content  
   - Footer  
-- **Settings** for comprehensive, modern System Settings
+- **Settings** for comprehensive, modern System Management
 ---
 
