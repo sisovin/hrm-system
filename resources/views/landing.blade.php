@@ -38,9 +38,9 @@
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features" class="text-gray-600 hover:text-indigo-600 transition">Features</a>
-                    <a href="#benefits" class="text-gray-600 hover:text-indigo-600 transition">Benefits</a>
-                    <a href="#contact" class="text-gray-600 hover:text-indigo-600 transition">Contact</a>
+                    <a href="features" class="text-gray-600 hover:text-indigo-600 transition">Features</a>
+                    <a href="benefits" class="text-gray-600 hover:text-indigo-600 transition">Benefits</a>
+                    <a href="contact" class="text-gray-600 hover:text-indigo-600 transition">Contact</a>
                     <a href="/admin/login" class="text-gray-600 hover:text-indigo-600 transition">Login</a>
                     <a href="/register" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">Get Started</a>
                 </div>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="md:w-1/2">
-                    <img src="https://via.placeholder.com/600x400/667eea/ffffff?text=HR+Management" alt="HRM Dashboard" class="rounded-lg shadow-2xl">
+                    <img src="/images/hrm-dashboard.png" alt="HRM Dashboard" class="rounded-lg shadow-2xl">
                 </div>
             </div>
         </div>
@@ -170,7 +170,7 @@
 
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
-                    <img src="https://via.placeholder.com/600x400/667eea/ffffff?text=Dashboard+Preview" alt="Dashboard" class="rounded-lg shadow-xl">
+                    <img src="/images/dashboard.png" alt="Dashboard" class="rounded-lg shadow-xl">
                 </div>
                 <div class="space-y-6">
                     <div class="flex items-start">
@@ -258,30 +258,30 @@
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Product</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#features" class="hover:text-white transition">Features</a></li>
-                        <li><a href="#" class="hover:text-white transition">Pricing</a></li>
-                        <li><a href="#" class="hover:text-white transition">Demo</a></li>
-                        <li><a href="#" class="hover:text-white transition">API</a></li>
+                        <li><a href="features" class="hover:text-white transition">Features</a></li>
+                        <li><a href="pricing" class="hover:text-white transition">Pricing</a></li>
+                        <li><a href="hrm-demo" class="hover:text-white transition">Demo</a></li>
+                        <li><a href="api-docs" class="hover:text-white transition">API</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Company</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">About Us</a></li>
-                        <li><a href="#" class="hover:text-white transition">Careers</a></li>
-                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="about" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="careers" class="hover:text-white transition">Careers</a></li>
+                        <li><a href="blog" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="contact" class="hover:text-white transition">Contact</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Legal</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-white transition">Security</a></li>
-                        <li><a href="#" class="hover:text-white transition">Compliance</a></li>
+                        <li><a href="privacy" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="terms" class="hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="security" class="hover:text-white transition">Security</a></li>
+                        <li><a href="compliance" class="hover:text-white transition">Compliance</a></li>
                     </ul>
                 </div>
             </div>
