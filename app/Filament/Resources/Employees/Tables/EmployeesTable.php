@@ -34,8 +34,8 @@ class EmployeesTable
                     ->searchable(),
                 TextColumn::make('phone')
                     ->searchable(),
-                TextColumn::make('hired_at')
-                    ->dateTime()
+                TextColumn::make('hire_date')
+                    ->date()
                     ->sortable(),
                 TextColumn::make('position')
                     ->searchable(),

@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -13,27 +15,68 @@ class EmployeeForm
         return $schema
             ->components([
                 TextInput::make('user_id')
-                    ->numeric(),
+                    ->numeric()
+                    ->label('User ID')
+                    ->helperText('Link to user account'),
                 TextInput::make('first_name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('last_name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('phone')
-                    ->tel(),
-                DateTimePicker::make('hired_at'),
-                TextInput::make('position'),
-                TextInput::make('department'),
+                    ->tel()
+                    ->maxLength(255),
+                DatePicker::make('date_of_birth')
+                    ->label('Date of Birth'),
+                Select::make('gender')
+                    ->options([
+                        'male' => 'Male',
+                        'female' => 'Female',
+                        'other' => 'Other',
+                    ]),
+                Textarea::make('address')
+                    ->rows(3)
+                    ->maxLength(65535),
+                DatePicker::make('hire_date')
+                    ->label('Hire Date'),
+                TextInput::make('position')
+                    ->maxLength(255),
+                TextInput::make('department')
+                    ->maxLength(255),
                 TextInput::make('salary')
                     ->required()
                     ->numeric()
-                    ->default(0.0),
-                TextInput::make('status')
+                    ->default(0.0)
+                    ->prefix('$'),
+                Select::make('status')
                     ->required()
-                    ->default('active'),
-            ]);
+                    ->default('active')
+                    ->options([
+                        'active' => 'Active',
+                        'pending' => 'Pending',
+                        'inactive' => 'Inactive',
+                    ]),
+                Select::make('employment_type')
+                    ->required()
+                    ->default('full_time')
+                    ->options([
+                        'full_time' => 'Full Time',
+                        'part_time' => 'Part Time',
+                        'contract' => 'Contract',
+                        'intern' => 'Intern',
+                    ]),
+                TextInput::make('experience_years')
+                    ->label('Years of Experience')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0),
+            ])
+            ->columns(2);
     }
 }
