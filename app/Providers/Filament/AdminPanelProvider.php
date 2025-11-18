@@ -42,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 \App\Filament\Widgets\StatsOverview::class,
                 \App\Filament\Widgets\EmployeesByDepartmentChart::class,
+                \App\Filament\Widgets\AverageSalaryByDepartmentBarChart::class,
                 \App\Filament\Widgets\RecentEmployees::class,
             ])
             ->middleware([
