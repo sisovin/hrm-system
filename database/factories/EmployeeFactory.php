@@ -20,11 +20,12 @@ class EmployeeFactory extends Factory
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
-            'hired_at' => $this->faker->dateTimeBetween('-5 years', 'now'),
+            'hire_date' => $this->faker->dateTimeBetween('-5 years', 'now')->format('Y-m-d'),
             'position' => $this->faker->jobTitle(),
             'department' => $this->faker->randomElement(['HR', 'Engineering', 'Sales', 'Support']),
             'salary' => $this->faker->randomFloat(2, 2000, 15000),
             'status' => 'active',
+            'employment_type' => $this->faker->randomElement(['full_time', 'part_time', 'contract', 'intern']),
         ];
     }
 }
