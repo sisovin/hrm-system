@@ -8,9 +8,9 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -58,10 +58,10 @@ class Profile extends Page implements HasForms
         ];
     }
 
-    public function profileForm(Form $form): Form
+    public function profileForm(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Profile Information')
                     ->description('Update your account profile information.')
                     ->schema([
@@ -88,10 +88,10 @@ class Profile extends Page implements HasForms
             ->statePath('profileData');
     }
 
-    public function passwordForm(Form $form): Form
+    public function passwordForm(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Update Password')
                     ->description('Ensure your account is using a long, random password to stay secure.')
                     ->schema([
