@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Filament\Pages;
+
+use App\Models\Employee;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
+
+class EmployeeProfile extends Page implements HasForms
+{
+    use InteractsWithForms;
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
+
+    protected static string $view = 'filament.pages.employee-profile';
+    
+    protected static string|\UnitEnum|null $navigationGroup = 'My Account';
+    
+    protected static ?string $navigationLabel = 'My Profile';
+    
+    protected static ?int $navigationSort = 1;
+
+    public ?array $data = [];
+    
+    public ?Employee $employee = null;
+
+    public function mount(): void
+    {
+        $user = Auth::user();
+        $this->employee = Employee::where('user_id', $user->id)->first();
+        
+        if ($this->employee) {
+            $this->form->fill($this->employee->toArray());
+        }
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                FileUpload::make('avatar')
+                    ->label('Profile Picture')
+                    ->image()
+                    ->avatar()
+                    ->directory('avatars')
+                    ->columnSpanFull(),
+                    
+                TextInput::make('first_name')
+                    ->label('First Name')
+                    ->required()
+                    ->maxLength(255),
+                    
+                TextInput::make('last_name')
+                    ->label('Last Name')
+                    ->required()
+                    ->maxLength(255),
+                    
+                TextInput::make('email')
+                    ->label('Email')
+                    ->email()
+                    ->required()
+                    ->disabled(),
+                    
+                TextInput::make('phone')
+                    ->label('Phone Number')
+                    ->tel()
+                    ->maxLength(20),
+                    
+                DatePicker::make('date_of_birth')
+                    ->label('Date of Birth')
+                    ->disabled(),
+                    
+                Select::make('gender')
+                    ->label('Gender')
+                    ->options([
+                        'male' => 'Male',
+                        'female' => 'Female',
+                        'other' => 'Other',
+                    ])
+                    ->disabled(),
+                    
+                Textarea::make('address')
+                    ->label('Address')
+                    ->rows(3)
+                    ->columnSpanFull(),
+                    
+                TextInput::make('position')
+                    ->label('Position')
+                    ->disabled(),
+                    
+                TextInput::make('department')
+                    ->label('Department')
+                    ->disabled(),
+                    
+                TextInput::make('employment_type')
+                    ->label('Employment Type')
+                    ->disabled(),
+                    
+                DatePicker::make('hire_date')
+                    ->label('Hire Date')
+                    ->disabled(),
+            ])
+            ->statePath('data')
+            ->columns(2);
+    }
+
+    public function save(): void
+    {
+        $data = $this->form->getState();
+        
+        if ($this->employee) {
+            // Only allow updating specific fields
+            $this->employee->update([
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'phone' => $data['phone'],
+                'address' => $data['address'],
+            ]);
+
+            Notification::make()
+                ->title('Profile Updated')
+                ->body('Your profile has been updated successfully.')
+                ->success()
+                ->send();
+        }
+    }
+
+    protected function getFormActions(): array
+    {
+        return [
+            \Filament\Actions\Action::make('save')
+                ->label('Update Profile')
+                ->submit('save')
+                ->color('primary'),
+        ];
+    }
+}

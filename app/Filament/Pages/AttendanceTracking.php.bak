@@ -1,0 +1,186 @@
+<?php
+
+namespace App\Filament\Pages;
+
+use App\Models\Attendance;
+use App\Models\Employee;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
+
+class AttendanceTracking extends Page implements HasForms, HasTable
+{
+    use InteractsWithForms;
+    use InteractsWithTable;
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clock';
+
+    protected static string $view = 'filament.pages.attendance-tracking';
+    
+    protected static string|\UnitEnum|null $navigationGroup = 'HR Management';
+    
+    protected static ?int $navigationSort = 5;
+    
+    protected static ?string $navigationLabel = 'Attendance Tracking';
+
+    public ?array $data = [];
+
+    public function mount(): void
+    {
+        $this->form->fill();
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('employee_id')
+                    ->label('Employee')
+                    ->options(Employee::where('status', 'active')->get()->pluck('full_name', 'id'))
+                    ->required()
+                    ->searchable()
+                    ->preload(),
+                DatePicker::make('date')
+                    ->label('Date')
+                    ->default(now())
+                    ->required(),
+                Textarea::make('notes')
+                    ->label('Notes')
+                    ->rows(3)
+                    ->placeholder('Optional notes about attendance'),
+            ])
+            ->statePath('data');
+    }
+
+    public function checkIn(): void
+    {
+        $data = $this->form->getState();
+        
+        $existingAttendance = Attendance::where('employee_id', $data['employee_id'])
+            ->whereDate('date', $data['date'])
+            ->first();
+
+        if ($existingAttendance) {
+            Notification::make()
+                ->title('Already Checked In')
+                ->body('This employee has already checked in today.')
+                ->warning()
+                ->send();
+            return;
+        }
+
+        Attendance::create([
+            'employee_id' => $data['employee_id'],
+            'date' => $data['date'],
+            'check_in' => now(),
+            'notes' => $data['notes'] ?? null,
+        ]);
+
+        Notification::make()
+            ->title('Check-in Successful')
+            ->body('Employee checked in at ' . now()->format('h:i A'))
+            ->success()
+            ->send();
+
+        $this->form->fill();
+    }
+
+    public function checkOut(): void
+    {
+        $data = $this->form->getState();
+        
+        $attendance = Attendance::where('employee_id', $data['employee_id'])
+            ->whereDate('date', $data['date'])
+            ->whereNull('check_out')
+            ->first();
+
+        if (!$attendance) {
+            Notification::make()
+                ->title('No Check-in Found')
+                ->body('Employee must check in first before checking out.')
+                ->warning()
+                ->send();
+            return;
+        }
+
+        $attendance->update([
+            'check_out' => now(),
+            'notes' => $data['notes'] ?? $attendance->notes,
+        ]);
+
+        Notification::make()
+            ->title('Check-out Successful')
+            ->body('Employee checked out at ' . now()->format('h:i A'))
+            ->success()
+            ->send();
+
+        $this->form->fill();
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->query(Attendance::query()->with('employee')->latest('date')->limit(20))
+            ->columns([
+                TextColumn::make('employee.first_name')
+                    ->label('Employee')
+                    ->formatStateUsing(fn ($record) => $record->employee->first_name . ' ' . $record->employee->last_name)
+                    ->searchable(['first_name', 'last_name'])
+                    ->sortable(),
+                TextColumn::make('date')
+                    ->date()
+                    ->sortable(),
+                TextColumn::make('check_in')
+                    ->time('h:i A')
+                    ->badge()
+                    ->color('success'),
+                TextColumn::make('check_out')
+                    ->time('h:i A')
+                    ->badge()
+                    ->color('danger')
+                    ->placeholder('Not checked out'),
+                TextColumn::make('hours_worked')
+                    ->label('Hours')
+                    ->formatStateUsing(function ($record) {
+                        if (!$record->check_out) {
+                            return 'In progress';
+                        }
+                        $diff = $record->check_in->diff($record->check_out);
+                        return $diff->format('%h hrs %i min');
+                    })
+                    ->badge()
+                    ->color('info'),
+                TextColumn::make('notes')
+                    ->limit(50)
+                    ->placeholder('No notes')
+                    ->tooltip(fn ($state) => $state),
+            ])
+            ->actions([
+                Action::make('checkOut')
+                    ->label('Check Out')
+                    ->icon('heroicon-o-arrow-right-on-rectangle')
+                    ->color('danger')
+                    ->visible(fn ($record) => $record->check_out === null)
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+                        $record->update(['check_out' => now()]);
+                        Notification::make()
+                            ->title('Check-out Successful')
+                            ->success()
+                            ->send();
+                    }),
+            ])
+            ->defaultSort('date', 'desc');
+    }
+}
